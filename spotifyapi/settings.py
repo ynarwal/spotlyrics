@@ -1,5 +1,5 @@
 import os
-env = os.environ.get('env')
+env = os.environ.get('ENV')
 if env == 'production' or env == 'staging':
     ALLOWED_HOSTS = ['spotlyrics.herokuapp.com']
     DEBUG = False
