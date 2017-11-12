@@ -67,6 +67,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if env == 'staging' or env == 'production':
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
+
+
 REACT_APP_DIR = os.path.join(BASE_DIR, 'spotify')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
