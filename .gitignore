@@ -20,3 +20,5 @@ spotify/.env.production.local
 spotify/npm-debug.log*
 spotify/yarn-debug.log*
 spotify/yarn-error.log*
+
+static/
