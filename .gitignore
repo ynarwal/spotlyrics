@@ -1,0 +1,26 @@
+venv/*
+db.sqlite3
+*.pyc
+vars
+
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+spotify/node_modules
+
+# testing
+spotify/coverage
+
+# production
+spotify/build
+
+# misc
+spotify/.DS_Store
+spotify/.env.local
+spotify/.env.development.local
+spotify/.env.test.local
+spotify/.env.production.local
+
+spotify/npm-debug.log*
+spotify/yarn-debug.log*
+spotify/yarn-error.log*
