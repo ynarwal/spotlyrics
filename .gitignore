@@ -2,9 +2,9 @@ venv/*
 db.sqlite3
 *.pyc
 vars
-
+*.djcache
 # See https://help.github.com/ignore-files/ for more about ignoring files.
-
+static/*
 # dependencies
 spotify/node_modules
 

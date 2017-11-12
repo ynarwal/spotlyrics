@@ -25,21 +25,31 @@ class SpotifyService:
         # Get profile data
         user_profile_api_endpoint = "{}/me/player/currently-playing".format(SPOTIFY_API_URL)
         response = requests.get(user_profile_api_endpoint, headers=authorization_header)
+        if response.status_code == 204:
+            return {
+                'lyrics' : 'You are not playing any song.'
+            }
         if response.status_code != 200:
             raise Exception(response.json())
 
         data = response.json()
+
         song_name = data['item']['name']
         first_artist = data['item']['artists'][0]
         artist_name = first_artist['name']
-        key = "{}{}".format(song_name, artist_name)
+     
+        key = "{}-{}".format(song_name, artist_name)
         if cache.get(key, None) is not None:
-            return cache.get(key)
+            return {
+                'lyrics' : cache.get(key)
+            }
         lyrics = load_lyrics(artist_name, song_name)[0]
         if lyrics == 'Error: Could not find lyrics.':
             lyrics = load_lyrics(artist_name, song_name)[0]
         cache.set(key,lyrics, 3000)
-        return lyrics
+        return {
+            'lyrics' : lyrics
+        }
 
     def refresh_token(self, token):
         expires_at = token.expires_at

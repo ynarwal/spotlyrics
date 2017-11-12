@@ -12,17 +12,9 @@ class SpotifyStore {
     @observable loadingSong = false;
 
     callback = (error: any, response: any, body: any) => {
-        console.log(error, body, response.statusCode);
-        if (response.statusCode === NOT_PLAYING_STATUS) {
-            this.playing = true;
-        }
-        else {
-            this.playing = true;
-            const lyrics = JSON.parse(body).lyrics;
-            if (lyrics !== undefined) {
-                this.currentSongLyrics = lyrics.replace(/\n/g, '<br />');
-                console.log(this.currentSongLyrics);
-            }
+        const lyrics = JSON.parse(body).lyrics;
+        if (lyrics !== undefined) {
+            this.currentSongLyrics = lyrics.replace(/\n/g, '<br />');
         }
         this.loadingSong = false;
     }

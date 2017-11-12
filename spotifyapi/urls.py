@@ -22,8 +22,8 @@ from django.views.static import serve
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    url(r'^$', views.FrontendAppView.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^api/',include(urlpatterns)),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^', views.FrontendAppView.as_view()),
 ]

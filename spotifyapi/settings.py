@@ -1,21 +1,25 @@
-
-
 import os
+env = os.environ.get('env')
+if env == 'production' or env == 'staging':
+    ALLOWED_HOSTS = ['spotlyrics.herokuapp.com']
+    DEBUG = False
+    LOGIN_REDIRECT_URL = '/'
+    ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = []
+    LOGIN_REDIRECT_URL = 'http://localhost:8000'
+    ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bilwd85*2)^k(!wp2ccccccccccc#5=u#s0!_8lyvoopwdy('
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get('SECRET_KEY')
+CACHE_FILE = os.path.join(BASE_DIR, 'django_cache')
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': CACHE_FILE,
+    }
+}
 
 
 # Application definition
@@ -45,8 +49,7 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
     }
 }
-LOGIN_REDIRECT_URL = 'http://localhost:3000'
-ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:3000'
+
 SOCIALACCOUNT_QUERY_EMAIL = True
 SITE_ID = 1
 ACCOUNT_USERNAME_REQUIRED = False
@@ -66,14 +69,15 @@ MIDDLEWARE = [
 
 REACT_APP_DIR = os.path.join(BASE_DIR, 'spotify')
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-     os.path.join(REACT_APP_DIR, 'build', 'static'),
-     os.path.join(REACT_APP_DIR, 'build'),
+    os.path.join(REACT_APP_DIR, 'build', 'static')
 ]
 
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:3000',
     'localhost:3000',
+    'localhost:8000'
 )
 
 ROOT_URLCONF = 'spotifyapi.urls'
@@ -149,11 +153,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
-
-STATIC_URL = '/static/'
 
 
 REST_FRAMEWORK = {

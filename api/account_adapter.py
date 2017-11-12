@@ -6,6 +6,6 @@ from allauth.account.adapter import DefaultAccountAdapter
 class MyAccountAdapter(DefaultAccountAdapter):
 
     def get_login_redirect_url(self, request):
-        path = "{BASEPATH}/accounts/{token}/"
+        path = "{BASEPATH}/account/{token}/"
         token = Token.objects.get(user=request.user)
         return path.format(BASEPATH=settings.LOGIN_REDIRECT_URL, token=token)

@@ -16,7 +16,7 @@ function Routes() {
     <Router>
       <Switch>
         <Route exact path="/" component={App} />
-        <Route exact path="/accounts/:token" component={Account} />
+        <Route exact path="/account/:token" component={Account} />
         <Route path="*" component={() => <div>404 page not found</div>} />
       </Switch>
     </Router>
