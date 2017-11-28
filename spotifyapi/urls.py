@@ -19,6 +19,7 @@ from django.conf import settings
 from api.urls import urlpatterns
 from api import views
 from django.views.static import serve
+from django.conf import settings
 from django.views.generic import TemplateView
 
 urlpatterns = [
@@ -27,3 +28,5 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^', views.FrontendAppView.as_view()),
 ]
+if not settings.DEBUG:
+    urlpatterns += [url (r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT, 'show_indexes': False}),]

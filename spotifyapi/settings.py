@@ -1,18 +1,17 @@
 import os
 env = os.environ.get('ENV')
 if env == 'production' or env == 'staging':
-    ALLOWED_HOSTS = ['spotlyrics.herokuapp.com']
     DEBUG = False
     LOGIN_REDIRECT_URL = '/'
     ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 else:
     DEBUG = True
-    ALLOWED_HOSTS = []
     LOGIN_REDIRECT_URL = 'http://localhost:8000'
     ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
 
+ALLOWED_HOSTS = ['*']
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'sdfdslfjsdfjsdlfjsdfjsdlfjsldfjsfsdfsdjhfskh'
 CACHE_FILE = os.path.join(BASE_DIR, 'django_cache')
 CACHES = {
     'default': {
@@ -66,10 +65,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-if env == 'staging' or env == 'production':
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if env == 'staging':
     MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_HTTPONLY = True
 
 
 REACT_APP_DIR = os.path.join(BASE_DIR, 'spotify')
@@ -79,11 +84,7 @@ STATICFILES_DIRS = [
     os.path.join(REACT_APP_DIR, 'build', 'static')
 ]
 
-CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:3000',
-    'localhost:3000',
-    'localhost:8000'
-)
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'spotifyapi.urls'
 AUTHENTICATION_BACKENDS = (
