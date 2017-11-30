@@ -1,24 +1,4 @@
 import os
-env = os.environ.get('ENV')
-if env == 'production' or env == 'staging':
-    DEBUG = False
-    LOGIN_REDIRECT_URL = '/'
-    ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-else:
-    DEBUG = True
-    LOGIN_REDIRECT_URL = 'http://localhost:8000'
-    ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
-
-ALLOWED_HOSTS = ['*']
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = 'sdfdslfjsdfjsdlfjsdfjsdlfjsldfjsfsdfsdjhfskh'
-CACHE_FILE = os.path.join(BASE_DIR, 'django_cache')
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': CACHE_FILE,
-    }
-}
 
 
 # Application definition
@@ -40,6 +20,28 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.spotify',
     'corsheaders'
 ]
+
+env = os.environ.get('ENV', None)
+if env == 'production' or env == 'staging':
+    DEBUG = False
+    LOGIN_REDIRECT_URL = '/'
+    ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+else:
+    DEBUG = True
+    LOGIN_REDIRECT_URL = 'http://localhost:8000'
+    ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
+
+SPOTIFY_WEB_URL =  os.environ.get('SPOTIFY_WEB_URL')
+ALLOWED_HOSTS = ['*']
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SECRET_KEY = 'sdfdslfjsdfjsdlfjsdfjsdlfjsldfjsfsdfsdjhfskh'
+CACHE_FILE = os.path.join(BASE_DIR, 'django_cache')
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': CACHE_FILE,
+    }
+}
 
 SOCIALACCOUNT_PROVIDERS = {
     'spotify': {
@@ -65,24 +67,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 if env == 'staging':
     MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    CSRF_COOKIE_HTTPONLY = True
-
-
-REACT_APP_DIR = os.path.join(BASE_DIR, 'spotify')
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-    os.path.join(REACT_APP_DIR, 'build', 'static')
-]
+    # SECURE_SSL_REDIRECT = True
+    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # SECURE_CONTENT_TYPE_NOSNIFF = True
+    # SECURE_BROWSER_XSS_FILTER = True
+    # SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_SECURE = True
+    # CSRF_COOKIE_HTTPONLY = True
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -163,7 +158,8 @@ USE_TZ = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     )
 }
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')

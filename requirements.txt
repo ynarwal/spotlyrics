@@ -4,10 +4,8 @@ django-allauth
 requests==2.18.4
 django-cors-headers
 beautifulsoup4==4.6.0
-PyQt5==5.9
 requests==2.18.4
-sip==4.19.3
-xmltodict==0.11.0
-dj-database-url
 gunicorn
 whitenoise
+django-rest-auth
+coreapi
