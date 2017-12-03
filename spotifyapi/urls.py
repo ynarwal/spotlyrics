@@ -17,16 +17,17 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from api.urls import urlpatterns
+from api import views
 from django.views.static import serve
 from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
-    url(r'^', include_docs_urls(title='Spot lyrics')),
+    url(r'^$', views.FrontendAppView.as_view()),
+    url(r'^docs', include_docs_urls(title='Spot lyrics')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/',include(urlpatterns)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^api/', include('rest_auth.urls')),
 ]
 
-if not settings.DEBUG:
-    urlpatterns += [url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT, 'show_indexes': False}),]
+urlpatterns += [url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT, 'show_indexes': False}),]

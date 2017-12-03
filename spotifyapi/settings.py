@@ -1,6 +1,5 @@
 import os
-
-
+import dj_database_url
 # Application definition
 
 INSTALLED_APPS = [
@@ -22,17 +21,12 @@ INSTALLED_APPS = [
 ]
 
 env = os.environ.get('ENV', None)
-if env == 'production' or env == 'staging':
-    DEBUG = False
-    LOGIN_REDIRECT_URL = '/'
-    ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-else:
-    DEBUG = True
-    LOGIN_REDIRECT_URL = 'http://localhost:8000'
-    ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
+
+DEBUG = True
+LOGIN_REDIRECT_URL = 'http://localhost:8000'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
 
 SPOTIFY_WEB_URL =  os.environ.get('SPOTIFY_WEB_URL')
-ALLOWED_HOSTS = ['*']
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'sdfdslfjsdfjsdlfjsdfjsdlfjsldfjsfsdfsdjhfskh'
 CACHE_FILE = os.path.join(BASE_DIR, 'django_cache')
@@ -68,19 +62,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if env == 'staging':
-    MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
-    # SECURE_SSL_REDIRECT = True
-    # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    # SECURE_CONTENT_TYPE_NOSNIFF = True
-    # SECURE_BROWSER_XSS_FILTER = True
-    # SESSION_COOKIE_SECURE = True
-    # CSRF_COOKIE_SECURE = True
-    # CSRF_COOKIE_HTTPONLY = True
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 CORS_ORIGIN_ALLOW_ALL = True
-
+ALLOWED_HOSTS = ['*']
 ROOT_URLCONF = 'spotifyapi.urls'
 AUTHENTICATION_BACKENDS = (
     
@@ -113,12 +96,7 @@ WSGI_APPLICATION = 'spotifyapi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -161,5 +139,27 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+REACT_APP_DIR = os.path.join(BASE_DIR, 'spotify')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [		
+     os.path.join(REACT_APP_DIR, 'build', 'static')		
+]
+
+if env == 'staging':
+    MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    ALLOWED_HOSTS = ['*']
+    DEBUG = False
+    LOGIN_REDIRECT_URL = '/'
+    ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+    db_from_env = dj_database_url.config()
+    DATABASES['default'].update(db_from_env)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }

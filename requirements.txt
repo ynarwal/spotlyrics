@@ -9,3 +9,4 @@ gunicorn
 whitenoise
 django-rest-auth
 coreapi
+dj_database_url

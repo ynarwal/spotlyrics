@@ -1,1 +1,1 @@
-web: gunicorn spotifyapi.wsgi --log-file -
+docker-compose up
