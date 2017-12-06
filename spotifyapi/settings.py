@@ -132,7 +132,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -146,9 +151,8 @@ STATICFILES_DIRS = [
      os.path.join(REACT_APP_DIR, 'build', 'static')		
 ]
 
-if env == 'staging':
+if os.environ.get('ENV') == 'staging':
     MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
-    SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     ALLOWED_HOSTS = ['*']
     DEBUG = False
@@ -156,10 +160,3 @@ if env == 'staging':
     ACCOUNT_LOGOUT_REDIRECT_URL = '/'
     db_from_env = dj_database_url.config()
     DATABASES['default'].update(db_from_env)
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
