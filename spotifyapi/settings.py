@@ -21,7 +21,6 @@ INSTALLED_APPS = [
 ]
 
 env = os.environ.get('ENV', None)
-
 DEBUG = True
 LOGIN_REDIRECT_URL = 'http://localhost:8000'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'http://localhost:8000'
@@ -52,6 +51,7 @@ ACCOUNT_ADAPTER = 'api.account_adapter.MyAccountAdapter'
 
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -152,11 +152,19 @@ STATICFILES_DIRS = [
 ]
 
 if os.environ.get('ENV') == 'staging':
-    MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware',]
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    ALLOWED_HOSTS = ['*']
-    DEBUG = False
-    LOGIN_REDIRECT_URL = '/'
-    ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-    db_from_env = dj_database_url.config()
+    LOGIN_REDIRECT_URL = 'https://spotifylyrics.herokuapp.com'
+    ACCOUNT_LOGOUT_REDIRECT_URL = 'https://spotifylyrics.herokuapp.com'
+
+
+    # Update database configuration with $DATABASE_URL.
+    db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(db_from_env)
+    DATABASES['default']['TEST'] = {'NAME': DATABASES['default']['NAME']}
+    # static file
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # allowed hosts
+    ALLOWED_HOSTS = ['*']
+    # Honor the 'X-Forwarded-Proto' header for request.is_secure()
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    DEBUG = False

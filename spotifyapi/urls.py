@@ -22,12 +22,12 @@ from django.views.static import serve
 from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
-    url(r'^$', views.FrontendAppView.as_view()),
     url(r'^docs', include_docs_urls(title='Spot lyrics')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/',include(urlpatterns)),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^api/', include('rest_auth.urls')),
+    url(r'^', views.FrontendAppView.as_view()),
 ]
 
 urlpatterns += [url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT, 'show_indexes': False}),]

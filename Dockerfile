@@ -1,4 +1,4 @@
-FROM revolutionsystems/python:3.6.3-wee-optimized-lto
+FROM python:3.6
 COPY requirements.txt /code/requirements.txt
 WORKDIR /code
 RUN pip install -r requirements.txt
